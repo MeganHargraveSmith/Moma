@@ -1,0 +1,107 @@
+-- Database structure for Moma. Users are linked to all other tables with a foreign key,
+-- and cascade deletion is implemented so that if a user is deleted, so is their data.
+
+
+-- Stores user details
+CREATE TABLE Users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, -- A foreign key in all other tables to allow for multi-user support
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL
+);
+
+-- Stores a users' clients
+CREATE TABLE Clients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    details TEXT,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
+
+-- Stores projects; collections of joined tasks that make up a larger goal
+CREATE TABLE Projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    client_id INTEGER,
+    name TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'not_started', -- Can be not_started, in_progress, waiting_approval, editing, complete
+    tags TEXT,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
+    FOREIGN KEY (client_id) REFERENCES Clients (id) ON DELETE SET NULL
+);
+
+-- Stores all tasks
+CREATE TABLE Tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    project_id INTEGER,
+    client_id INTEGER,
+    name TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'not_started', -- Can be not_started, in_progress, waiting_approval, editing, complete
+    priority INTEGER, -- Priority level (structure could be: 1 = High, 2 = Medium, 3 = Low)
+    due_date DATE,
+    tags TEXT,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES Projects (id) ON DELETE SET NULL,
+    FOREIGN KEY (client_id) REFERENCES Clients (id) ON DELETE SET NULL
+);
+
+-- Stores the presaved processes themselves; when a process is invoked by the user, it becomes a project/task
+CREATE TABLE Processes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'not_started', -- Can be not_started, in_progress, waiting_approval, editing, complete
+    tags TEXT,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
+
+-- Stores tags the user makes for categorising to-do's.
+CREATE TABLE Tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
+
+-- Stores the data in the users' expense tracking table
+CREATE TABLE Expenses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    date DATE NOT NULL,
+    amount REAL NOT NULL,
+    source TEXT NOT NULL,
+    receipt BLOB, -- For uploaded files
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
+
+-- Stores time tracking data for analytics
+CREATE TABLE TimeTracking (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    task_id INTEGER,
+    client_id INTEGER,
+    start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    end_time TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
+    FOREIGN KEY (task_id) REFERENCES Tasks (id) ON DELETE SET NULL,
+    FOREIGN KEY (client_id) REFERENCES Clients (id) ON DELETE SET NULL
+);
+
+-- Stores any uploaded files, regardless of where they are located in Moma
+CREATE TABLE FileUploads (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    task_id INTEGER,
+    client_id INTEGER,
+    expense_id INTEGER,
+    file_name TEXT NOT NULL,
+    file BLOB NOT NULL, -- File data
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
+    FOREIGN KEY (task_id) REFERENCES Tasks (id) ON DELETE SET NULL,
+    FOREIGN KEY (client_id) REFERENCES Clients (id) ON DELETE SET NULL,
+    FOREIGN KEY (expense_id) REFERENCES Expenses (id) ON DELETE SET NULL
+);
