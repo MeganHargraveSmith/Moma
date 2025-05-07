@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Clients{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center" style="padding-left: 30px;">
+            <!-- Button to open the modal for adding a new client. -->
+            <button class="btn btn-link p-0" id="newClientButton" data-bs-toggle="tooltip" data-bs-placement="top" title="New Client">
+                <i class="bi bi-person-plus" style="font-size: 36px;"></i>
+            </button>
+        </div>
+        <div class="d-flex align-items-center ms-auto" style="margin-right: 30px;">
+            <div class="d-flex">
+                <!-- Search input for filtering clients. -->
+                <input class="form-control" type="search" id="clientSearchInput" placeholder="Search Clients..." aria-label="Search">
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+    {% include 'includes/client_button.html' %}
+    
+    <table class="table table-hover" id="clientsTable">
+        <thead>
+            <tr class="text-muted">
+                <th></th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>LinkedIn</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for client in clients %}
+                <tr class="client-row" data-id="{{ client.id }}">
+                    <td class="text-center" style="vertical-align: middle;">
+                        <!-- Button to toggle the display of client details. -->
+                        <button class="btn btn-link p-0 toggle-details" type="button">
+                            <i class="bi bi-caret-right-fill"></i>
+                        </button>
+                    </td>
+                    <td class="editable-name" data-field="name" style="text-align: left; padding-left: 20px;">
+                        <span class="item-name text-truncate d-inline-block" style="max-width: 100%;">{{ client.name }}</span>
+                    </td>
+                    <td class="editable-status" data-field="active" style="text-align: left;">
+                        <span class="status-text status-{{ client.active }}">
+                            {% for value, label in client.ACTIVE_CHOICES %}
+                                {% if value == client.active %}
+                                    {{ label }}
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </td>
+                    <td class="editable-phone" data-field="phone_number" style="text-align: left;">
+                        <span class="phone-text text-truncate d-inline-block" style="max-width: 100%;">{{ client.phone_number|default:'' }}</span>
+                    </td>
+                    <td class="editable-email" data-field="email" style="text-align: left;">
+                        <span class="email-text text-truncate d-inline-block" style="max-width: 100%;">{{ client.email|default:'' }}</span>
+                    </td>
+                    <td class="editable-linkedin" data-field="linkedin" style="text-align: left;">
+                        {% if client.linkedin %}
+                            <a href="{{ client.linkedin }}" target="_blank" class="linkedin-link">
+                                <span class="linkedin-text text-truncate d-inline-block" style="max-width: 100%;">{{ client.linkedin }}</span>
+                            </a>
+                        {% else %}
+                            <span class="linkedin-text text-truncate d-inline-block" style="max-width: 100%;"></span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="details-row" data-client="{{ client.id }}" style="display: none;">
+                    <td colspan="6" class="details-cell">
+                        <div class="details-container">
+                            <div class="details-content">
+                                {% if client.details %}
+                                    {% for detail in client.details.splitlines %}
+                                        {% if detail.strip %}
+                                            <div class="detail-item" data-detail-id="{{ forloop.counter0 }}">
+                                                <span class="detail-text">{{ detail }}</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="add-detail-row">
+                                <!-- Button to add more details for the client. -->
+                                <button class="btn btn-link p-0 add-detail-btn" data-bs-toggle="tooltip" title="Add Details">
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="dropdown-menu status-dropdown" style="display: none;">
+    <a class="dropdown-item" href="#" data-value="active">Active</a>
+    <a class="dropdown-item" href="#" data-value="inactive">Inactive</a>
+    <a class="dropdown-item" href="#" data-value="prospective">Prospective</a>
+    <a class="dropdown-item" href="#" data-value="removed">Removed</a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Links to custom JavaScript for client management functionality. -->
+<script src="{% static 'js/clients.js' %}"></script>
+{% endblock %}

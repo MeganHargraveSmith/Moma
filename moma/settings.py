@@ -4,24 +4,29 @@ from datetime import timedelta
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
 
-# Loads environment variables from .env file
-load_dotenv()
+"""
+Django settings for Moma.
+Includes configuration for installed apps, middleware, and database settings.
+"""
 
-SECRET_KEY = os.getenv('SECRET_KEY')  # Gets the secret key from the env file
-
+SECRET_KEY = 'ta2926ufuz_sw!w0q=)go^qmfeoz1$19$km#wg=$s6%y)x0ptd'
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Makes sure Django can find the static folder
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'static',
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'login'
+# Makes it so users are automatically logged out when they close the Moma tab
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,19 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Third-party apps
     'rest_framework',
-    'rest_framework.authtoken',
     'djoser',
+    # Third-party apps
+    'rest_framework.authtoken',
     'corsheaders',
     'django_bootstrap5',
-
-    # Custom apps
-    'accounts',
-    'tasks',
-    'clients',
-    'business',
+    # Main app
+    'moma',
 ]
 
 MIDDLEWARE = [
@@ -54,29 +54,36 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'moma.middleware.ForceLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'moma.urls'
 
-AUTH_USER_MODEL = "accounts.CustomUser"  # Makes sure Django uses my custom user model
+AUTH_USER_MODEL = 'moma.CustomUser'
 
 # DRF settings
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
     ],
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/hour',
+    }
 }
 
 # Djoser settings
 DJOSER = {
     'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer',
-        'user': 'accounts.serializers.UserSerializer',
-        'current_user': 'accounts.serializers.UserSerializer',
+        'user_create': 'moma.serializers.UserCreateSerializer',
+        'user': 'moma.serializers.UserSerializer',
+        'current_user': 'moma.serializers.UserSerializer',
     },
     'USER_CREATE_PASSWORD_RETYPE': True,
 }
@@ -90,10 +97,13 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
+# Template configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
     {
-        'NAME': 'accounts.validators.CustomPasswordValidator',
+        'NAME': 'moma.validators.CustomPasswordValidator',
     },
 ]
 
@@ -157,5 +167,36 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Makes it so users are automatically logged out when they close the Moma tab
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# Security settings
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'moma': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

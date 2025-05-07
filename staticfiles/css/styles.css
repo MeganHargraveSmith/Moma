@@ -1,0 +1,1307 @@
+/* ==========================================================================
+   1. Universal Styles
+   ========================================================================== */
+
+/* Base Styles */
+body {
+    font-family: "Courier New", Courier, monospace, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+}
+
+/* Tooltip Styles */
+.tooltip {
+    font-family: "Courier New", Courier, monospace, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Common Layout Components */
+.sidebar {
+    width: 120px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #f8f9fa;
+    padding-top: 30px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 15px;
+    font-size: 24px;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background-color: #e9ecef;
+    text-decoration: none;
+}
+
+#logoutButton {
+    display: block;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+#logoutButton button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 0;
+    border: none;
+    background: none;
+    color: #000;
+    text-align: center;
+}
+
+#logoutButton button:hover {
+    background-color: #e9ecef;
+    text-decoration: none;
+}
+
+.main-content {
+    margin-left: 120px;
+    padding: 0;
+    width: calc(100% - 120px);
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.main-container {
+    position: relative !important;
+    margin-top: 90px !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    clear: both !important;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   2. Navbar and Table Styles
+   ========================================================================== */
+
+/* Navbar Styles */
+.navbar.navbar-expand-lg {
+    background-color: #e9ecef !important;
+    z-index: 1000 !important;
+    margin-left: 0 !important;
+    padding: 15px 0 !important;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: 120px !important;
+    height: 80px !important;
+    margin-bottom: 0 !important;
+}
+
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px !important;
+    height: 100% !important;
+}
+
+.navbar .form-control {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    padding: 0.375rem 0.75rem;
+    width: 250px;
+    margin-right: 0;
+    max-width: 250px;
+}
+
+.navbar .btn-link.p-0 {
+    padding: 0;
+}
+
+.navbar .btn-link.p-0 i {
+    font-size: 36px;
+    color: black;
+}
+
+.navbar .btn-link.p-0.ms-5 {
+    margin-left: 3rem;
+}
+
+/* Common Table Styles */
+.table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    margin: 0 !important;
+}
+
+.table td, .table th {
+    background-color: transparent !important;
+    border: none !important;
+    vertical-align: middle !important;
+    padding: 0.75rem !important;
+    height: 48px !important;
+}
+
+.table thead tr {
+    border-bottom: none !important;
+}
+
+.table thead tr th {
+    border-bottom: none !important;
+}
+
+.table td:first-child, .table th:first-child {
+    text-align: center !important;
+}
+
+.table.table-hover tbody tr:hover {
+    background-color: #e9ecef !important;
+}
+
+.table.table-hover tbody tr:hover td,
+.table.table-hover tbody tr:hover th {
+    background-color: #e9ecef !important;
+}
+
+/* ==========================================================================
+   3. Button and Interactive Element Styles
+   ========================================================================== */
+
+.btn-link {
+    text-decoration: none;
+}
+
+.btn-link:hover, .btn-link:focus {
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.bi-power {
+    display: block;
+    padding: 15px;
+    font-size: 24px;
+    color: #000;
+    text-align: center;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.bi-power:hover {
+    background-color: #e9ecef;
+    text-decoration: none;
+    border: 1px solid #e9ecef;
+}
+
+/* ==========================================================================
+   4. Modal and Dropdown Styles
+   ========================================================================== */
+
+.modal {
+    z-index: 1050;
+}
+
+.modal-backdrop {
+    z-index: 1040;
+}
+
+.modal-content {
+    position: relative;
+    z-index: 1051;
+}
+
+.dropdown-menu {
+    min-width: 200px;
+    padding: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown-menu .dropdown-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 2px 0;
+    color: #212529;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-menu .dropdown-item.active {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+/* ==========================================================================
+   5. Dashboard Specific Styles
+   ========================================================================== */
+
+#todoTable th:nth-child(1), #todoTable td:nth-child(1) { width: 8%; }
+#todoTable th:nth-child(2), #todoTable td:nth-child(2) { width: 20%; }
+#todoTable th:nth-child(3), #todoTable td:nth-child(3) { width: 20%; }
+#todoTable th:nth-child(4), #todoTable td:nth-child(4) { width: 20%; }
+#todoTable th:nth-child(5), #todoTable td:nth-child(5) { width: 15%; }
+#todoTable th:nth-child(6), #todoTable td:nth-child(6) { width: 15%; }
+
+/* ==========================================================================
+   6. Clients Specific Styles
+   ========================================================================== */
+
+#clientsTable th:nth-child(1), #clientsTable td:nth-child(1) { width: 8%; }
+#clientsTable th:nth-child(2), #clientsTable td:nth-child(2) { width: 18%; }
+#clientsTable th:nth-child(3), #clientsTable td:nth-child(3) { width: 12%; }
+#clientsTable th:nth-child(4), #clientsTable td:nth-child(4) { width: 12%; }
+#clientsTable th:nth-child(5), #clientsTable td:nth-child(5) { width: 23%; }
+#clientsTable th:nth-child(6), #clientsTable td:nth-child(6) { width: 27%; }
+
+/* ==========================================================================
+   7. Bookkeeping Specific Styles
+   ========================================================================== */
+
+#bookkeepingTable th:nth-child(1) { width: 8%; text-align: center; }
+#bookkeepingTable th:nth-child(2) { width: 15%; text-align: left; padding-left: 20px; }
+#bookkeepingTable th:nth-child(3) { width: 15%; text-align: left; }
+#bookkeepingTable th:nth-child(4) { width: 16%; text-align: left; }
+#bookkeepingTable th:nth-child(5) { width: 15%; text-align: left; }
+#bookkeepingTable th:nth-child(6) { width: 15%; text-align: left; }
+#bookkeepingTable th:nth-child(7) { width: 16%; text-align: left; }
+
+/* ==========================================================================
+   8. Form and Input Styles
+   ========================================================================== */
+
+.editable-name, .editable-due-date {
+    min-width: 100%;
+    display: block;
+    padding: 0 !important;
+    height: 100% !important;
+}
+
+.editable-name input, .editable-due-date input {
+    width: 200px !important;
+}
+
+.editing input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* ==========================================================================
+   9. Status and Priority Styles
+   ========================================================================== */
+
+.status-text {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    min-width: 100px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000 !important;
+}
+
+.editable-status .status-text.status-not_started {
+    background-color: #ffcdd2 !important;
+}
+
+.editable-status .status-text.status-in_progress {
+    background-color: #ffe0b2 !important;
+}
+
+.editable-status .status-text.status-awaiting_approval {
+    background-color: #bbdefb !important;
+}
+
+.editable-status .status-text.status-editing {
+    background-color: #fff9c4 !important;
+}
+
+.editable-status .status-text.status-done {
+    background-color: #c8e6c9 !important;
+}
+
+.editable-status .status-text.status-cancelled {
+    background-color: #e1bee7 !important;
+}
+
+/* ==========================================================================
+   10. Miscellaneous Styles
+   ========================================================================== */
+
+.bi-caret-right-fill, .bi-caret-down-fill {
+    transition: transform 0.3s ease;
+}
+
+.bi-caret-down-fill {
+    transform: rotate(90deg);
+}
+
+.priority-cell, .status-cell, .deadline-cell, .item-name, .client-cell,
+.editable-name, .editable-status, .editable-phone, .editable-email, .editable-linkedin {
+    cursor: pointer;
+}
+
+.project-row {
+    cursor: pointer;
+}
+
+.toggle-subtasks {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+    color: inherit !important;
+}
+
+.toggle-subtasks i {
+    transition: transform 0.2s ease;
+    display: inline-block;
+    font-size: 1.25rem !important;
+    color: #000 !important;
+}
+
+.toggle-subtasks i.rotated {
+    transform: rotate(90deg);
+}
+
+.subtask-row {
+    display: none;
+}
+
+.item-name, .date-text {
+    display: inline-block !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    background-color: transparent !important;
+    vertical-align: middle !important;
+}
+
+.editable-name input, .editable-due-date input {
+    width: 200px !important;
+}
+
+.editing input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.dropdown-menu {
+    min-width: 200px;
+    padding: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown-menu .dropdown-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 2px 0;
+    color: #212529;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-menu .dropdown-item.active {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+.status-dropdown, .priority-dropdown, .client-status-dropdown {
+    position: fixed !important;
+    z-index: 1000 !important;
+}
+
+.editable-status,
+.editable-priority,
+.editable-client {
+    cursor: pointer;
+    position: relative;
+}
+
+.status-text {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    min-width: 100px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000 !important;
+}
+
+.editable-status .status-text.status-not_started,
+#todoTable.table-hover tbody tr:hover .editable-status .status-text.status-not_started,
+#clientsTable.table-hover tbody tr:hover .editable-status .status-text.status-not_started {
+    background-color: #ffcdd2 !important;
+}
+
+.editable-status .status-text.status-in_progress,
+#todoTable.table-hover tbody tr:hover .editable-status .status-text.status-in_progress,
+#clientsTable.table-hover tbody tr:hover .editable-status .status-text.status-in_progress {
+    background-color: #ffe0b2 !important;
+}
+
+.editable-status .status-text.status-awaiting_approval,
+#todoTable.table-hover tbody tr:hover .editable-status .status-text.status-awaiting_approval,
+#clientsTable.table-hover tbody tr:hover .editable-status .status-text.status-awaiting_approval {
+    background-color: #bbdefb !important;
+}
+
+.editable-status .status-text.status-editing,
+#todoTable.table-hover tbody tr:hover .editable-status .status-text.status-editing,
+#clientsTable.table-hover tbody tr:hover .editable-status .status-text.status-editing {
+    background-color: #fff9c4 !important;
+}
+
+.editable-status .status-text.status-done,
+#todoTable.table-hover tbody tr:hover .editable-status .status-text.status-done,
+#clientsTable.table-hover tbody tr:hover .editable-status .status-text.status-done {
+    background-color: #c8e6c9 !important;
+}
+
+.editable-status .status-text.status-cancelled,
+#todoTable.table-hover tbody tr:hover .editable-status .status-text.status-cancelled,
+#clientsTable.table-hover tbody tr:hover .editable-status .status-text.status-cancelled {
+    background-color: #e1bee7 !important;
+}
+
+#todoTable tbody tr td.editable-due-date {
+    padding: 0.75rem;
+}
+
+#todoTable tbody tr td.editable-due-date span.date-text {
+    display: inline-block;
+    width: auto;
+    min-width: 80px;
+    text-align: left !important;
+    padding: 4px 8px;
+    color: #212529;
+    border-radius: 4px;
+    line-height: 1.2;
+    min-height: 1.2rem;
+    background-color: transparent;
+}
+
+#todoTable tbody tr td.editable-due-date span.date-text.deadline-approaching,
+#todoTable.table-hover tbody tr:hover td.editable-due-date span.date-text.deadline-approaching {
+    background-color: #fff3cd !important;
+    color: #000 !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+
+#todoTable tbody tr td.editable-due-date span.date-text.deadline-today,
+#todoTable.table-hover tbody tr:hover td.editable-due-date span.date-text.deadline-today {
+    background-color: #ffe5d0 !important;
+    color: #000 !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+
+#todoTable tbody tr td.editable-due-date span.date-text.deadline-overdue,
+#todoTable.table-hover tbody tr:hover td.editable-due-date span.date-text.deadline-overdue {
+    background-color: #ffd6d6 !important;
+    color: #000 !important;
+    padding: 2px 8px !important;
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.project-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.btn-link {
+    text-decoration: none;
+}
+
+.btn-link:hover, .btn-link:focus {
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.bi-power {
+    display: block;
+    padding: 15px;
+    font-size: 24px;
+    color: #000;
+    text-align: center;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.bi-power:hover {
+    background-color: #e9ecef;
+    text-decoration: none;
+    border: 1px solid #e9ecef;
+}
+
+.modal {
+    z-index: 1050;
+}
+
+.modal-backdrop {
+    z-index: 1040;
+}
+
+.modal-content {
+    position: relative;
+    z-index: 1051;
+}
+
+.bi-caret-right-fill, .bi-caret-down-fill {
+    transition: transform 0.3s ease;
+}
+
+.bi-caret-down-fill {
+    transform: rotate(90deg);
+}
+
+.container-fluid {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    margin-left: 0;
+    padding: 0;
+}
+
+body .main-container {
+    position: relative !important;
+    margin-top: 90px !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    clear: both !important;
+}
+
+.editable-due-date {
+    min-width: 130px;
+}
+
+.date-text {
+    text-align: center !important;
+    padding: 4px 2px !important;
+    color: #212529 !important;
+    border-radius: 4px !important;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.navbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.navbar .btn-link,
+.navbar a {
+    color: black !important;
+    text-decoration: none !important;
+}
+
+.navbar .btn-link:hover,
+.navbar a:hover {
+    color: black !important;
+    background-color: #e9ecef !important;
+    border-radius: 0.25rem !important;
+}
+
+.navbar .dropdown-toggle::after {
+    display: none;
+}
+
+.navbar .dropdown-toggle i {
+    transition: transform 0.3s ease;
+    font-size: 36px;
+}
+
+.navbar .dropdown-toggle[aria-expanded="true"] i {
+    transform: rotate(90deg);
+}
+
+.navbar .dropdown-menu {
+    min-width: 200px;
+    padding: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .dropdown-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.navbar .dropdown-item.active {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+#todoTable {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#todoTable td, #todoTable th {
+    background-color: transparent !important;
+    border: none !important;
+    vertical-align: middle;
+    padding: 0.75rem !important;
+    height: 48px !important;
+}
+
+#todoTable thead tr {
+    border-bottom: none !important;
+}
+
+#todoTable thead tr th {
+    border-bottom: none !important;
+}
+
+#todoTable td:first-child, #todoTable th:first-child {
+    text-align: center !important;
+}
+
+#todoTable.table-hover tbody tr:hover {
+    background-color: transparent !important;
+}
+
+#todoTable td, #todoTable th {
+    background-color: transparent !important;
+    border: none !important;
+    vertical-align: middle;
+    padding: 0.75rem !important;
+}
+
+#todoTable tbody tr:hover .status-text,
+#todoTable tbody tr:hover .date-text {
+    background-color: transparent !important;
+}
+
+#todoTable .item-name, 
+#todoTable .priority-text, 
+#todoTable .client-text {
+    background-color: transparent !important;
+}
+
+.navbar .form-control {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    padding: 0.375rem 0.75rem;
+    width: 250px;
+    margin-right: 0;
+    max-width: 250px;
+}
+
+.navbar .form-control[type="search"],
+.navbar .form-control#searchInput,
+.navbar .form-control#clientSearchInput,
+.navbar .form-control#bookkeepingSearchInput {
+    width: 250px !important;
+    max-width: 250px !important;
+    margin-right: 0 !important;
+}
+
+#clientsTable {
+    width: 100% !important;
+}
+
+#clientsTable td, #clientsTable th {
+    background-color: transparent !important;
+    border: none !important;
+    vertical-align: middle;
+    padding: 0.75rem !important;
+    height: 48px !important;
+}
+
+#clientsTable thead tr {
+    border-bottom: none !important;
+}
+
+#clientsTable thead tr th {
+    border-bottom: none !important;
+}
+
+#clientsTable td:first-child, #clientsTable th:first-child {
+    text-align: center !important;
+}
+
+#clientsTable.table-hover tbody tr:hover {
+    background-color: #e9ecef !important;
+}
+
+#clientsTable.table-hover tbody tr:hover td,
+#clientsTable.table-hover tbody tr:hover th {
+    background-color: #e9ecef !important;
+}
+
+#clientsTable tbody tr:hover .status-text {
+    background-color: transparent !important;
+}
+
+#clientsTable .item-name,
+#clientsTable .phone-text,
+#clientsTable .email-text,
+#clientsTable .linkedin-text {
+    background-color: transparent !important;
+}
+
+.editable-name, .editable-status, .editable-phone, .editable-email, .editable-linkedin {
+    cursor: pointer;
+}
+
+.details-row {
+    background-color: #e9ecef;
+    display: none;
+}
+
+.client-row.active {
+    background-color: #e9ecef !important;
+}
+
+.details-cell {
+    padding: 0 !important;
+    background-color: #e9ecef !important;
+}
+
+.details-container {
+    padding: 15px;
+    display: block !important;
+}
+
+.details-content {
+    margin-bottom: 15px;
+    display: block !important;
+}
+
+.detail-item {
+    margin-bottom: 10px;
+    padding: 8px;
+    background-color: transparent !important;
+    border-radius: 4px;
+    cursor: pointer;
+    min-height: 38px;
+    display: flex;
+    align-items: flex-start;
+    text-align: left !important;
+}
+
+.detail-item:hover {
+    background-color: #f8f9fa !important;
+}
+
+.detail-text {
+    display: block;
+    width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.2;
+    text-align: left !important;
+}
+
+.detail-textarea {
+    width: 100%;
+    min-height: 38px;
+    max-height: 200px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    resize: none;
+    overflow-y: auto;
+    background-color: white !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.add-detail-row {
+    padding: 8px;
+    text-align: left;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    background-color: transparent !important;
+}
+
+.add-detail-row:hover {
+    background-color: transparent !important;
+}
+
+.add-detail-btn {
+    color: #495057 !important;
+    transition: color 0.2s ease;
+    display: block !important;
+    padding: 0 !important;
+    font-size: 28px !important;
+}
+
+.add-detail-btn:hover {
+    color: #212529 !important;
+    background-color: transparent !important;
+}
+
+.add-detail-btn i {
+    font-size: 28px !important;
+}
+
+.bi-caret-right-fill {
+    transition: transform 0.2s ease;
+}
+
+.bi-caret-right-fill.rotated {
+    transform: rotate(90deg);
+}
+
+.linkedin-link {
+    color: #0077b5;
+    text-decoration: none;
+}
+
+.linkedin-link:hover {
+    text-decoration: underline;
+}
+
+.toggle-details i {
+    transition: transform 0.2s ease;
+    display: inline-block;
+    font-size: 1.25rem;
+    color: #000;
+}
+
+.toggle-details i.rotated {
+    transform: rotate(90deg);
+}
+
+#clientsTable th:nth-child(1), #clientsTable td:nth-child(1) { width: 8%; }
+#clientsTable th:nth-child(2), #clientsTable td:nth-child(2) { width: 18%; }
+#clientsTable th:nth-child(3), #clientsTable td:nth-child(3) { width: 12%; }
+#clientsTable th:nth-child(4), #clientsTable td:nth-child(4) { width: 12%; }
+#clientsTable th:nth-child(5), #clientsTable td:nth-child(5) { width: 23%; }
+#clientsTable th:nth-child(6), #clientsTable td:nth-child(6) { width: 27%; }
+
+#clientsTable .item-name,
+#clientsTable .phone-text,
+#clientsTable .email-text,
+#clientsTable .linkedin-text {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+    vertical-align: middle;
+}
+
+#clientsTable .editable-name {
+    display: table-cell;
+    vertical-align: middle;
+    height: 48px;
+    padding: 0.75rem;
+}
+
+#clientsTable .editable-name .item-name {
+    display: inline-block;
+    line-height: 1.2;
+    vertical-align: middle;
+    padding: 0;
+    margin: 0;
+}
+
+#clientsTable .status-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#todoTable .item-name,
+#todoTable .client-text,
+#todoTable .priority-text,
+#todoTable .date-text {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+    vertical-align: middle;
+}
+
+#todoTable .status-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status-dropdown .dropdown-item {
+    text-align: left;
+    padding: 0.5rem 1rem;
+}
+
+.status-dropdown {
+    text-align: left;
+    min-width: 150px;
+}
+
+.status-text {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+}
+
+.status-active,
+#clientsTable.table-hover tbody tr:hover .status-active {
+    background-color: #d1e7dd !important;
+    color: #000 !important;
+}
+
+.status-inactive,
+#clientsTable.table-hover tbody tr:hover .status-inactive {
+    background-color: #f8d7da !important;
+    color: #000 !important;
+}
+
+.status-prospective,
+#clientsTable.table-hover tbody tr:hover .status-prospective {
+    background-color: #fff3cd !important;
+    color: #000 !important;
+}
+
+.status-removed,
+#clientsTable.table-hover tbody tr:hover .status-removed {
+    background-color: #e2d9f3 !important;
+    color: #000 !important;
+}
+
+#bookkeepingTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+#bookkeepingTable td, #bookkeepingTable th {
+    background-color: transparent;
+    border: none;
+    vertical-align: middle;
+    padding: 0.75rem;
+    height: 48px;
+    overflow: hidden;
+}
+
+#bookkeepingTable .document {
+    width: 14%;
+    max-width: 14%;
+    min-width: 14%;
+}
+
+#bookkeepingTable .document-link {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+}
+
+#bookkeepingTable .document-text {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+}
+
+#bookkeepingTable .date-text {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left !important;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.main-container {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.editable-due-date input[type="date"],
+.editable-invoice-date input[type="date"],
+.editable-payment-date input[type="date"] {
+    width: 100px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.editable-amount {
+    vertical-align: middle;
+    padding: 0.75rem;
+}
+
+.editable-amount .amount-text {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+    vertical-align: middle;
+}
+
+.editable-amount input {
+    width: 50%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.editable-business, .editable-doc-number {
+    vertical-align: middle;
+    padding: 0.75rem;
+}
+
+.editable-business .business-text,
+.editable-doc-number .doc-number-text {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+    vertical-align: middle;
+}
+
+.editable-business input,
+.editable-doc-number input {
+    width: 90%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+#bookkeepingTable .doc-number-text:empty::before,
+#bookkeepingTable .business-text:empty::before,
+#bookkeepingTable .date-text:empty::before,
+#bookkeepingTable .amount-text:empty::before {
+    content: 'Click to edit';
+    color: #6c757d;
+    font-style: italic;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+#bookkeepingTable .doc-number-text:empty,
+#bookkeepingTable .business-text:empty,
+#bookkeepingTable .date-text:empty,
+#bookkeepingTable .amount-text:empty {
+    display: inline-block;
+    min-width: 100%;
+}
+
+#bookkeepingTable tfoot .summary-row td {
+    background-color: #e9ecef !important;
+    border-top: 2px solid #000 !important;
+    padding: 20px 40px !important;
+}
+
+#bookkeepingTable tfoot .summary-row {
+    background-color: #e9ecef !important;
+}
+
+.navbar .btn-link.p-0 {
+    padding: 0;
+}
+
+.navbar .btn-link.p-0 i {
+    font-size: 36px;
+    color: black;
+}
+
+.navbar .btn-link.p-0.ms-5 {
+    margin-left: 3rem;
+}
+
+.main-container {
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding: 0 30px;
+}
+
+#bookkeepingTable {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#bookkeepingTable thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+#bookkeepingTable th {
+    color: #6c757d;
+}
+
+#bookkeepingTable th:nth-child(1) { width: 8%; text-align: center; }
+#bookkeepingTable th:nth-child(2) { width: 15%; text-align: left; padding-left: 20px; }
+#bookkeepingTable th:nth-child(3) { width: 15%; text-align: left; }
+#bookkeepingTable th:nth-child(4) { width: 16%; text-align: left; }
+#bookkeepingTable th:nth-child(5) { width: 15%; text-align: left; }
+#bookkeepingTable th:nth-child(6) { width: 15%; text-align: left; }
+#bookkeepingTable th:nth-child(7) { width: 16%; text-align: left; }
+
+.bookkeeping-row td {
+    vertical-align: middle;
+}
+
+.delete-cell {
+    width: 8%;
+    text-align: center;
+}
+
+.document {
+    width: 14%;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.document-link i {
+    font-size: 28px;
+    color: black;
+}
+
+#bookkeepingTable tfoot .summary-row td {
+    background-color: #e9ecef !important;
+    border-top: 2px solid #000 !important;
+    padding: 20px 40px !important;
+}
+
+#bookkeepingTable tfoot .summary-row {
+    background-color: #e9ecef !important;
+}
+
+.document-container {
+    width: 100%;
+    height: 80vh;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#documentFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}

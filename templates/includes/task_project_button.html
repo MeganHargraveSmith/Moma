@@ -1,0 +1,120 @@
+<!-- Task/Project Selection Modal -->
+<div class="modal fade" id="selectionModal" tabindex="-1" aria-labelledby="selectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectionModalLabel">Create New</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Would you like to create a new task or a new project?</p>
+                <!-- Button to create a new task. -->
+                <button id="createTaskButton" class="btn btn-primary w-100 mb-2">Create Task</button>
+                <!-- Button to create a new project. -->
+                <button id="createProjectButton" class="btn btn-secondary w-100">Create Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Project Form Modal -->
+<div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectModalLabel">Project Creation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="backToProjectSelectionButton" class="btn btn-link" style="color: #6c757d; font-size: 1.25rem; margin-left: 5px;">
+                    <i class="bi bi-arrow-left" style="font-size: 1.25rem;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="projectForm">
+                    <div class="mb-3">
+                        <label for="projectName" class="form-label">Project Name</label>
+                        <input type="text" class="form-control" id="projectName" maxlength="100" required>
+                        <div class="invalid-feedback" id="projectNameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="projectPriority" class="form-label">Priority</label>
+                        <select class="form-select" id="projectPriority">
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="projectClient" class="form-label">Associated Business</label>
+                        <select class="form-select" id="projectClient">
+                            <option value="">Unassigned</option>
+                            <option value="my_business">My Business</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="projectDueDate" class="form-label">Due Date</label>
+                        <input type="date" class="form-control" id="projectDueDate" min="{{ today_date }}">
+                        <div class="invalid-feedback" id="projectDueDateError"></div>
+                    </div>
+                    <div id="subtaskContainer">
+                        <div class="mb-3">
+                            <label for="subtaskName1" class="form-label">Subtask</label>
+                            <input type="text" class="form-control" id="subtaskName1" maxlength="100" required>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <!-- Button to add a new subtask. -->
+                        <button type="button" id="addSubtaskButton" class="btn btn-secondary">+ Add Subtask</button>
+                        <!-- Button to create the project. -->
+                        <button type="submit" class="btn btn-primary">Create Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Task Form Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">Task Creation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="backToSelectionButton" class="btn btn-link" style="color: #6c757d; font-size: 1.25rem; margin-left: 5px;">
+                    <i class="bi bi-arrow-left" style="font-size: 1.25rem;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="taskForm">
+                    <div class="mb-3">
+                        <label for="taskName" class="form-label">Task Name</label>
+                        <input type="text" class="form-control" id="taskName" maxlength="100" required>
+                        <div class="invalid-feedback" id="taskNameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="priority" class="form-label">Priority</label>
+                        <select class="form-select" id="priority">
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="client" class="form-label">Associated Business</label>
+                        <select class="form-select" id="client">
+                            <option value="">Unassigned</option>
+                            <option value="my_business">My Business</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dueDate" class="form-label">Due Date</label>
+                        <input type="date" class="form-control" id="dueDate" min="{{ today_date }}">
+                        <div class="invalid-feedback" id="dueDateError"></div>
+                    </div>
+                    <!-- Button to create the task. -->
+                    <button type="submit" class="btn btn-primary">Create Task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

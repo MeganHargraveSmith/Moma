@@ -1,0 +1,53 @@
+1:50:Moma/templates/includes/client_button.html
+<!-- New Client Form Modal -->
+<div class="modal fade" id="newClientModal" tabindex="-1" aria-labelledby="newClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newClientModalLabel">New Client</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newClientForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="clientName" class="form-label">Client Name*</label>
+                        <input type="text" class="form-control" id="clientName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientStatus" class="form-label">Status*</label>
+                        <select class="form-select" id="clientStatus" name="active" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="prospective">Prospective</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phoneNumber" name="phone_number" pattern="[0-9\s]+">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="linkedin" class="form-label">LinkedIn</label>
+                        <input type="url" class="form-control" id="linkedin" name="linkedin">
+                    </div>
+                    <div id="otherInfoContainer">
+                        <div class="mb-3">
+                            <label class="form-label">Other Information</label>
+                            <textarea class="form-control" name="details[]" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Button to add new information fields. -->
+                <button type="button" class="btn btn-secondary" id="newInfoButton">New Information</button>
+                <!-- Button to create the new client. -->
+                <button type="button" class="btn btn-primary" id="createClientButton">Create Client</button>
+            </div>
+        </div>
+    </div>
+</div> 

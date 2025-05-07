@@ -1,0 +1,26 @@
+INFO 2025-04-11 20:29:06,292 autoreload 21608 8205029184 Watching for file changes with StatReloader
+INFO 2025-04-11 20:29:17,652 autoreload 21608 8205029184 /Users/Megan/Documents/Uni/DSP/Moma/moma/settings.py changed, reloading.
+INFO 2025-04-11 20:29:17,887 autoreload 21635 8205029184 Watching for file changes with StatReloader
+INFO 2025-04-11 20:29:25,392 basehttp 21635 6122467328 "GET /dashboard/ HTTP/1.1" 200 59442
+INFO 2025-04-11 20:29:25,439 basehttp 21635 6122467328 "GET /static/css/styles.css HTTP/1.1" 200 19978
+INFO 2025-04-11 20:29:25,441 basehttp 21635 6139293696 "GET /static/js/task_project.js HTTP/1.1" 200 16029
+INFO 2025-04-11 20:29:25,442 basehttp 21635 6172946432 "GET /static/js/dashboard.js HTTP/1.1" 200 35876
+INFO 2025-04-11 20:29:25,443 basehttp 21635 6156120064 "GET /static/js/clients.js HTTP/1.1" 200 38658
+INFO 2025-04-11 20:29:25,512 basehttp 21635 6156120064 "GET /api/active_clients/ HTTP/1.1" 200 14
+WARNING 2025-04-11 20:29:25,624 log 21635 6156120064 Not Found: /favicon.ico
+WARNING 2025-04-11 20:29:25,624 basehttp 21635 6156120064 "GET /favicon.ico HTTP/1.1" 404 6355
+INFO 2025-04-11 20:29:37,479 basehttp 21635 6156120064 "POST /api/create_task/ HTTP/1.1" 200 29
+INFO 2025-04-11 20:29:37,506 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:29:37,572 basehttp 21635 6156120064 "GET /api/active_clients/ HTTP/1.1" 200 14
+INFO 2025-04-11 20:30:07,570 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:30:37,573 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:31:07,582 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:31:37,579 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:32:07,588 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:32:37,578 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:33:07,577 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:33:37,579 basehttp 21635 6156120064 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:34:05,296 autoreload 21635 8205029184 /Users/Megan/Documents/Uni/DSP/Moma/moma/settings.py changed, reloading.
+INFO 2025-04-11 20:34:05,629 autoreload 22079 8205029184 Watching for file changes with StatReloader
+INFO 2025-04-11 20:34:07,590 basehttp 22079 6205042688 "GET /dashboard/ HTTP/1.1" 200 60690
+INFO 2025-04-11 20:34:13,042 autoreload 22079 8205029184 /Users/Megan/Documents/Uni/DSP/Moma/moma/settings.py changed, reloading.

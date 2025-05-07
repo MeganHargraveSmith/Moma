@@ -6,37 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Moma</title>
     
-    <!-- Bootstrap 5 CSS -->
+    <!-- Links to Bootstrap 5 CSS for styling the signup page. -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     {% load static %}
+    <!-- Links to custom styles for the application. -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body class="bg-light">
-    {% if messages %}
-    <div class="position-fixed top-0 start-50 translate-middle-x pt-3" style="z-index: 1000;">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
     <div class="container">
+        <!-- Center the signup form vertically and horizontally. -->
         <div class="row justify-content-center min-vh-100 align-items-center">
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-body p-5">
                         <h2 class="text-center mb-4">Create Account</h2>
+                        
+                        {% if messages %}
+                        <div class="mb-3">
+                            <!-- Display any messages (e.g., errors or notifications) to the user. -->
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-2" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Form for user registration. -->
                         <form method="post" class="needs-validation" novalidate>
                             {% csrf_token %}
                             
                             <div class="mb-3">
-                                <label for="full_name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                                <label for="user_name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="user_name" name="user_name" required>
                                 <div class="invalid-feedback">
                                     Please enter your name.
                                 </div>
@@ -77,9 +82,11 @@
                                 </div>
                             </div>
                         
+                            <!-- Submit button for the signup form. -->
                             <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Sign Up</button>
                             
                             <p class="text-center mb-0">
+                                <!-- Link to the login page for existing users. -->
                                 Already have an account? <a href="{% url 'login' %}">Log in</a>
                             </p>
                         </form>
@@ -89,11 +96,10 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
+    <!-- Links to Bootstrap 5 JavaScript for functionality. -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-    // Form validation
+    // Validates the form on submission and checks password match.
     (function () {
         'use strict'
         var forms = document.querySelectorAll('.needs-validation')
@@ -104,7 +110,6 @@
                     event.stopPropagation()
                 }
                 
-                // Check if passwords match
                 const password = form.querySelector('#password')
                 const confirmPassword = form.querySelector('#confirmPassword')
                 if (password.value !== confirmPassword.value) {
@@ -114,7 +119,6 @@
                 } else {
                     confirmPassword.setCustomValidity('')
                 }
-                
                 form.classList.add('was-validated')
             }, false)
         })
