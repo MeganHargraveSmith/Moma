@@ -192,7 +192,6 @@ def get_business_name(request):
 
 
 @login_required
-@cache_page(60 * 15)  # Caches the view for 15 minutes.
 def dashboard_view(request):
     """
     Display the dashboard for the logged-in user, including tasks and projects.

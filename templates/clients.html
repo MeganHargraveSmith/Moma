@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Clients{% endblock %}
 
 {% block content %}
+
+{% include "includes/client_button.html" %}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container-fluid">
         <div class="d-flex align-items-center" style="padding-left: 30px;">
@@ -22,8 +26,6 @@
 </nav>
 
 <div class="main-container">
-    {% include 'includes/client_button.html' %}
-    
     <table class="table table-hover" id="clientsTable">
         <thead>
             <tr class="text-muted">

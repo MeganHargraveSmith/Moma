@@ -13,6 +13,11 @@
 </head>
 
 <body>
+    <!-- Debug information -->
+    <div style="display: none;">
+        Debug: Base template loaded
+    </div>
+
     <div class="sidebar">
         <!-- Sidebar navigation links. -->
         <a href="{% url 'dashboard' %}" data-bs-toggle="tooltip" title="Dashboard">
@@ -39,11 +44,25 @@
     </div>
 
     <div class="main-content">
+        <!-- Debug information -->
+        <div style="display: none;">
+            Debug: About to include task_project_button.html
+        </div>
         <!-- Include task/project button modal. -->
         {% include 'includes/task_project_button.html' %}
+        <div style="display: none;">
+            Debug: Finished including task_project_button.html
+        </div>
         
+        <!-- Debug information -->
+        <div style="display: none;">
+            Debug: About to render content block
+        </div>
         {% block content %}
         {% endblock %}
+        <div style="display: none;">
+            Debug: Finished rendering content block
+        </div>
     </div>
 
     <!-- Links to jQuery and Bootstrap JavaScript for functionality. -->

@@ -1,6 +1,6 @@
-// Contains utility functions for common operations across the client management system
+// Defines a utility object with various helper functions.
 const Utils = {
-    // Creates an editable input field with standard event handlers
+    // Creates an editable input field with specified options and a save function.
     createEditableInput(currentValue, className, saveFunction, options = {}) {
         const input = document.createElement('input');
         input.value = currentValue;
@@ -13,6 +13,7 @@ const Utils = {
         container.appendChild(input);
         input.focus();
 
+        // Sets up event listeners for the input field.
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -36,7 +37,7 @@ const Utils = {
         return { input, container };
     },
 
-    // Makes an API call with proper error handling and CSRF token management
+    // Makes an API call to the specified endpoint with the given method and data.
     async makeApiCall(endpoint, method, data) {
         try {
             const response = await fetch(endpoint, {
@@ -59,7 +60,7 @@ const Utils = {
         }
     },
 
-    // Displays a modal dialog for user confirmation with optional "don't ask again" feature
+    // Displays a confirmation dialog and resolves the promise based on user input.
     async showConfirmationDialog(title, message) {
         return new Promise((resolve) => {
             const dialog = document.createElement('div');
@@ -92,6 +93,7 @@ const Utils = {
             const modal = new bootstrap.Modal(dialog);
             modal.show();
 
+            // Sets up event listeners for the confirmation dialog buttons.
             dialog.querySelector('#confirmAction').addEventListener('click', () => {
                 const dontAskAgain = dialog.querySelector('#dontAskAgain').checked;
                 if (dontAskAgain) {
@@ -112,7 +114,7 @@ const Utils = {
         });
     },
 
-    // Updates the status display in the UI with appropriate styling and text formatting
+    // Updates the display of a status cell based on the new status.
     updateStatusDisplay(statusCell, newStatus, statusMap) {
         const statusText = statusCell.querySelector('.status-text');
         const displayText = statusMap[newStatus] || newStatus.split('_').map(word => 
@@ -125,7 +127,7 @@ const Utils = {
     }
 };
 
-// Initialises all client management functionality when the page loads
+// Initialises various editing functionalities when the DOM is fully loaded.
 document.addEventListener('DOMContentLoaded', function() {
     InitialiseNameEditing();
     InitialiseStatusEditing();
@@ -146,12 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const otherInfoContainer = document.getElementById('otherInfoContainer');
         const clientForm = document.getElementById('newClientForm');
 
+        // Sets up an event listener for the new client button.
         if (newClientButton) {
             newClientButton.addEventListener('click', function() {
                 modalInstance.show();
             });
         }
 
+        // Sets up an event listener for the new info button.
         if (newInfoButton) {
             newInfoButton.addEventListener('click', function() {
                 const newInfoDiv = document.createElement('div');
@@ -163,31 +167,43 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Sets up an event listener for the create client button.
         if (createClientButton) {
             createClientButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 const formData = new FormData(clientForm);
+                const details = Array.from(formData.getAll('details[]'))
+                    .filter(detail => detail.trim() !== '')
+                    .join('\n');
                 const clientData = {
                     name: formData.get('name'),
+                    active: formData.get('active'),
                     phone_number: formData.get('phone_number'),
                     email: formData.get('email'),
                     linkedin: formData.get('linkedin'),
-                    details: Array.from(formData.getAll('details[]')).filter(detail => detail.trim() !== '')
+                    details: details
                 };
 
+                // Sends a POST request to create a new client.
                 fetch('/api/clients/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
+                        'X-CSRFToken': getCookie('csrftoken'),
                     },
-                    body: JSON.stringify(clientData)
+                    body: JSON.stringify({
+                        name: clientData.name,
+                        active: clientData.active,
+                        email: clientData.email,
+                        phone_number: clientData.phone_number,
+                        linkedin: clientData.linkedin,
+                        details: clientData.details
+                    })
                 })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(err => {
-                            console.error('Server response:', err);
-                            throw new Error('Failed to create client');
+                        return response.json().then(data => {
+                            throw new Error(data.error || 'Failed to create client');
                         });
                     }
                     return response.json();
@@ -198,6 +214,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         fetchBusinessName();
                     }
                     showToast('Client created successfully');
+                    
+                    clientForm.reset();
+                    otherInfoContainer.innerHTML = `
+                        <div class="mb-3">
+                            <label class="form-label">Other Information</label>
+                            <textarea class="form-control" name="details[]" rows="3"></textarea>
+                        </div>
+                    `;
+                    
+                    handlePageRefresh();
                 })
                 .catch(error => {
                     console.error('Error creating client:', error);
@@ -208,13 +234,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Retrieves the CSRF token from cookies for secure API requests
+// Defines the function to get a cookie by name.
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
+            // Checks if the cookie matches the name.
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -224,7 +251,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Enables inline editing of client names with validation and error handling
+// Defines the function to initialise name editing.
 function InitialiseNameEditing() {
     document.querySelectorAll('.editable-name').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -232,6 +259,7 @@ function InitialiseNameEditing() {
             const id = this.closest('tr').dataset.id;
             const cell = this;
 
+            // Defines the function to save the new name.
             const saveName = async () => {
                 const newName = input.value.trim();
                 if (newName === '') {
@@ -263,19 +291,21 @@ function InitialiseNameEditing() {
     });
 }
 
-// Manages client status changes with confirmation for removal actions
+// Defines the function to initialise status editing.
 function InitialiseStatusEditing() {
     const statusCells = document.querySelectorAll('.editable-status');
     const statusDropdown = document.querySelector('.status-dropdown');
     let currentStatusCell = null;
     let previousStatus = null;
 
+    // Defines the function to save the new status.
     async function saveStatus(newStatus) {
         if (!currentStatusCell) return;
 
         const id = currentStatusCell.closest('tr').dataset.id;
         const statusText = currentStatusCell.querySelector('.status-text');
 
+        // Shows a confirmation dialog if the new status is 'removed'.
         if (newStatus === 'removed') {
             const dontAskAgain = localStorage.getItem('dontAskConfirmation') === 'true';
             
@@ -309,7 +339,7 @@ function InitialiseStatusEditing() {
             statusText.classList.add(`status-${newStatus}`);
 
             if (newStatus === 'removed') {
-                // Mark the client for deletion but keep it visible
+                // Marks the client for deletion but keeps it visible.
                 const row = currentStatusCell.closest('tr');
                 row.dataset.markedForDeletion = 'true';
             }
@@ -318,6 +348,7 @@ function InitialiseStatusEditing() {
         }
     }
 
+    // Sets up event listeners for status cells.
     statusCells.forEach(cell => {
         cell.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -334,6 +365,7 @@ function InitialiseStatusEditing() {
             const windowHeight = window.innerHeight;
             const spaceBelow = windowHeight - rect.bottom;
             
+            // Positions the dropdown based on available space.
             if (spaceBelow < dropdownHeight && rect.top > dropdownHeight) {
                 statusDropdown.style.top = `${rect.top - dropdownHeight}px`;
             } else {
@@ -350,6 +382,7 @@ function InitialiseStatusEditing() {
         });
     });
 
+    // Sets up event listeners for dropdown items.
     statusDropdown.querySelectorAll('.dropdown-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -362,6 +395,7 @@ function InitialiseStatusEditing() {
         });
     });
 
+    // Hides the dropdown when clicking outside of it.
     document.addEventListener('click', (e) => {
         if (!statusDropdown.contains(e.target) && !Array.from(statusCells).some(cell => cell.contains(e.target))) {
             statusDropdown.style.display = 'none';
@@ -370,7 +404,7 @@ function InitialiseStatusEditing() {
     });
 }
 
-// Handles phone number editing with proper formatting and validation
+// Defines the function to initialise phone editing.
 function InitialisePhoneEditing() {
     document.querySelectorAll('.editable-phone').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -378,6 +412,7 @@ function InitialisePhoneEditing() {
             const id = this.closest('tr').dataset.id;
             const cell = this;
 
+            // Defines the function to save the new phone number.
             const savePhone = async () => {
                 const newPhone = input.value.trim();
                 try {
@@ -403,7 +438,7 @@ function InitialisePhoneEditing() {
     });
 }
 
-// Manages email address editing with type validation and error handling
+// Defines the function to initialise email editing.
 function InitialiseEmailEditing() {
     document.querySelectorAll('.editable-email').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -411,6 +446,7 @@ function InitialiseEmailEditing() {
             const id = this.closest('tr').dataset.id;
             const cell = this;
 
+            // Defines the function to save the new email address.
             const saveEmail = async () => {
                 const newEmail = input.value.trim();
                 try {
@@ -436,7 +472,7 @@ function InitialiseEmailEditing() {
     });
 }
 
-// Controls LinkedIn URL editing with link formatting and validation
+// Defines the function to initialise LinkedIn editing.
 function InitialiseLinkedInEditing() {
     document.querySelectorAll('.editable-linkedin').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -444,6 +480,7 @@ function InitialiseLinkedInEditing() {
             const id = this.closest('tr').dataset.id;
             const cell = this;
 
+            // Defines the function to save the new LinkedIn URL.
             const saveLinkedIn = async () => {
                 const newLinkedIn = input.value.trim();
                 try {
@@ -477,7 +514,7 @@ function InitialiseLinkedInEditing() {
     });
 }
 
-// Initialises the details toggle functionality
+// Defines the function to initialise the toggle for client details.
 function InitialiseDetailsToggle() {
     document.querySelectorAll('.toggle-details').forEach(button => {
         button.addEventListener('click', function() {
@@ -489,16 +526,16 @@ function InitialiseDetailsToggle() {
                 console.error('Details row not found for client:', row.dataset.id);
                 return;
             }
-            
-            // Toggle the details row
+
+            // Toggles the visibility of the details row.
             if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
                 detailsRow.style.display = 'table-row';
                 row.classList.add('active');
                 icon.classList.add('rotated');
                 
-                // Fetch and display details if they exist
                 const detailsContent = detailsRow.querySelector('.details-content');
                 if (detailsContent && !detailsContent.querySelector('.detail-item')) {
+                    // Fetches client details if they are not already loaded.
                     fetch(`/api/get_client_details/${row.dataset.id}/`)
                         .then(response => response.json())
                         .then(data => {
@@ -523,9 +560,8 @@ function InitialiseDetailsToggle() {
     });
 }
 
-// Initialises the details editing functionality
+// Defines the function to initialise details editing.
 function InitialiseDetailsEditing() {
-    // Handle adding new details
     document.querySelectorAll('.add-detail-btn').forEach(button => {
         button.addEventListener('click', function() {
             const detailsContent = this.closest('.details-container').querySelector('.details-content');
@@ -538,22 +574,16 @@ function InitialiseDetailsEditing() {
                           rows="1"></textarea>
             `;
             
-            // Insert the new detail above the add button
             detailsContent.appendChild(newDetailItem);
-            
-            // Focus the new textarea
             const textarea = newDetailItem.querySelector('textarea');
             textarea.focus();
-            
-            // Adjust textarea height based on content
             const adjustTextareaHeight = () => {
                 textarea.style.height = 'auto';
                 textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
             };
-            
             textarea.addEventListener('input', adjustTextareaHeight);
             
-            // Handle saving the new detail
+            // Defines the function to save the new detail.
             const saveDetail = async () => {
                 const detailText = textarea.value.trim();
                 if (detailText) {
@@ -586,14 +616,12 @@ function InitialiseDetailsEditing() {
             });
         });
     });
-    
-    // Handle editing existing details
     document.querySelectorAll('.detail-item').forEach(item => {
         item.addEventListener('click', handleDetailEdit);
     });
 }
 
-// Handles editing an existing detail
+// Defines the function to handle detail editing.
 function handleDetailEdit() {
     const detailText = this.querySelector('.detail-text').textContent;
     const originalItem = this;
@@ -608,8 +636,6 @@ function handleDetailEdit() {
     
     const textarea = this.querySelector('textarea');
     textarea.focus();
-    
-    // Adjust textarea height based on content
     const adjustTextareaHeight = () => {
         textarea.style.height = 'auto';
         textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
@@ -618,19 +644,19 @@ function handleDetailEdit() {
     adjustTextareaHeight();
     textarea.addEventListener('input', adjustTextareaHeight);
     
+    // Defines the function to save the edited detail.
     const saveDetail = async () => {
         const newText = textarea.value.trim();
         if (newText) {
-            // Get all detail items, including the one being edited
             const allDetailItems = Array.from(detailsContent.querySelectorAll('.detail-item'));
             const existingDetails = allDetailItems.map(item => {
                 if (item === originalItem) {
-                    return newText; // Use the new text for the edited item
+                    return newText;
                 } else {
                     return item.querySelector('.detail-text')?.textContent || '';
                 }
-            }).filter(text => text.trim() !== ''); // Remove any empty details
-            
+            }).filter(text => text.trim() !== '');
+        
             try {
                 await Utils.makeApiCall(`/api/clients/${clientId}/`, 'PATCH', {
                     details: existingDetails.join('\n')
@@ -642,9 +668,7 @@ function handleDetailEdit() {
                 console.error('Error saving detail:', error);
             }
         } else {
-            // If the text is empty, remove this detail
             originalItem.remove();
-            // Update the database to remove this detail
             const remainingDetails = Array.from(detailsContent.querySelectorAll('.detail-item'))
                 .map(item => item.querySelector('.detail-text')?.textContent || '')
                 .filter(text => text.trim() !== '');
@@ -667,7 +691,7 @@ function handleDetailEdit() {
     });
 }
 
-// Implements search functionality across all client fields
+// Defines the function to initialise the search functionality.
 function InitialiseSearch() {
     const searchInput = document.getElementById('clientSearchInput');
     console.log('Initialising search with input:', searchInput);
@@ -677,6 +701,7 @@ function InitialiseSearch() {
         return;
     }
 
+    // Sets up an event listener for the search input.
     searchInput.addEventListener('input', function() {
         console.log('Search input changed:', this.value);
         const searchTerm = this.value.toLowerCase();
@@ -701,6 +726,7 @@ function InitialiseSearch() {
             const detailsContent = detailsRow ? detailsRow.querySelector('.details-content') : null;
             const details = detailsContent ? detailsContent.textContent.toLowerCase() : '';
             
+            // Checks if the row matches the search term.
             const matches = name.includes(searchTerm) || 
                           phone.includes(searchTerm) || 
                           email.includes(searchTerm) || 
@@ -712,7 +738,7 @@ function InitialiseSearch() {
             row.style.display = matches ? '' : 'none';
             
             if (detailsRow) {
-                detailsRow.style.display = 'none';  // Always hide details row when searching
+                detailsRow.style.display = 'none';
                 const toggleButton = row.querySelector('.toggle-details i');
                 if (toggleButton) {
                     toggleButton.classList.remove('bi-caret-down-fill');
@@ -723,7 +749,7 @@ function InitialiseSearch() {
     });
 }
 
-// Handles client status changes with appropriate confirmation dialogs
+// Defines the function to handle status changes for clients.
 function handleStatusChange(clientId, newStatus) {
     if (newStatus === 'removed') {
         if (confirm('Are you sure you want to remove this client? This action cannot be undone.')) {
@@ -734,7 +760,7 @@ function handleStatusChange(clientId, newStatus) {
     }
 }
 
-// Updates the client status in the database and UI
+// Defines the function to update the status of a client.
 function updateClientStatus(clientId, newStatus, statusCell) {
     const csrfToken = getCookie('csrftoken');
     fetch(`/clients/${clientId}/update_status/`, {
@@ -755,6 +781,7 @@ function updateClientStatus(clientId, newStatus, statusCell) {
         if (data.success) {
             const statusText = statusCell.querySelector('.status-text');
             
+            // Maps status values to their display text.
             const statusDisplayMap = {
                 'active': 'Active',
                 'inactive': 'Inactive',
@@ -785,18 +812,59 @@ function updateClientStatus(clientId, newStatus, statusCell) {
     });
 }
 
-// Manages the display of removed clients on page refresh
+// Defines the function to refresh the clients table.
+function refreshClientsTable() {
+    fetch('/clients/', {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch clients');
+        }
+        return response.text();
+    })
+    .then(html => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        const newTbody = tempDiv.querySelector('#clientsTable tbody');
+        if (newTbody) {
+            const currentTbody = document.querySelector('#clientsTable tbody');
+            currentTbody.innerHTML = newTbody.innerHTML;
+            
+            // Reinitialises editing functionalities for the new table.
+            InitialiseNameEditing();
+            InitialiseStatusEditing();
+            InitialisePhoneEditing();
+            InitialiseEmailEditing();
+            InitialiseLinkedInEditing();
+            InitialiseDetailsToggle();
+            InitialiseDetailsEditing();
+            InitialiseSearch();
+        }
+    })
+    .catch(error => {
+        console.error('Error refreshing clients table:', error);
+        showToast('Failed to refresh client list. Please try again.', 'error');
+    });
+}
+
+// Defines the function to handle page refresh.
 function handlePageRefresh() {
+    refreshClientsTable();
     document.querySelectorAll('tr[data-marked-for-deletion="true"]').forEach(row => {
         row.style.display = 'none';
     });
 }
 
-// Handle client deletion when leaving the page
+// Sets up an event listener to handle client deletions before the page unloads.
 window.addEventListener('beforeunload', function() {
     const removedClients = document.querySelectorAll('tr[data-marked-for-deletion="true"]');
     if (removedClients.length > 0) {
-        // Send a request to delete all marked clients
         fetch('/api/delete_marked_clients/', {
             method: 'POST',
             headers: {

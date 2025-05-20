@@ -1,20 +1,14 @@
-// Stores the business name for use in client selection dropdowns.
 let businessName = 'My Business';
-
-// Tracks the number of subtasks in the project creation form.
 let subtaskCount = 1;
-
 console.log('task_project.js starting execution');
 
-// Initialises the task and project creation functionality.
-// Sets up modals, event listeners, and form handlers.
+
+
 function initializeTaskProjectCreation() {
     console.log('Initialising task/project creation...');
-    
     const selectionModal = document.getElementById('selectionModal');
     const taskModal = document.getElementById('taskModal');
     const projectModal = document.getElementById('projectModal');
-    
     console.log('Selection modal found:', selectionModal);
     console.log('Task modal found:', taskModal);
     console.log('Project modal found:', projectModal);
@@ -24,23 +18,22 @@ function initializeTaskProjectCreation() {
         return;
     }
 
-     // Initialises Bootstrap modals with static backdrop to prevent closing on click outside.
     const selectionModalInstance = new bootstrap.Modal(selectionModal, {
         backdrop: 'static',
         keyboard: false
     });
-    
     const taskModalInstance = new bootstrap.Modal(taskModal, {
         backdrop: 'static',
         keyboard: false
     });
-    
     const projectModalInstance = new bootstrap.Modal(projectModal, {
         backdrop: 'static',
         keyboard: false
     });
 
-    // Handles the task button click event and shows the selection modal.
+
+
+
     document.addEventListener('click', function(e) {
         const taskButton = e.target.closest('#taskButton');
         if (taskButton) {
@@ -53,7 +46,6 @@ function initializeTaskProjectCreation() {
         }
     });
 
-    //Sets up the initial client selection dropdowns with the business name.
     const taskClientSelect = document.getElementById('client');
     const projectClientSelect = document.getElementById('projectClient');
     
@@ -102,11 +94,9 @@ function initializeTaskProjectCreation() {
         
         if (taskClientSelect && data.clients) {
             console.log('Updating task client dropdown with', data.clients.length, 'clients');
-            // Keep the first two options (My Business and Unassigned)
             while (taskClientSelect.options.length > 2) {
                 taskClientSelect.remove(2);
             }
-            
             data.clients.forEach(client => {
                 console.log('Adding client option:', client);
                 const option = document.createElement('option');
@@ -118,11 +108,9 @@ function initializeTaskProjectCreation() {
         
         if (projectClientSelect && data.clients) {
             console.log('Updating project client dropdown with', data.clients.length, 'clients');
-            // Keep the first two options (My Business and Unassigned)
             while (projectClientSelect.options.length > 2) {
                 projectClientSelect.remove(2);
             }
-            
             data.clients.forEach(client => {
                 console.log('Adding client option:', client);
                 const option = document.createElement('option');
@@ -134,10 +122,11 @@ function initializeTaskProjectCreation() {
     })
     .catch(error => {
         console.error('Error fetching clients:', error);
-        alert('An error occurred while fetching clients. Please try again later.');
+        showToast('An error occurred while fetching clients. Please try again later.', 'error');
     });
 
-    // Handles the task creation button click and transitions to the task creation modal.
+
+
     const createTaskButton = document.getElementById('createTaskButton');
     if (createTaskButton) {
         createTaskButton.addEventListener('click', function() {
@@ -148,6 +137,8 @@ function initializeTaskProjectCreation() {
             document.getElementById('taskName').focus();
         });
     }
+
+
 
     const backToSelectionButton = document.getElementById('backToSelectionButton');
     if (backToSelectionButton) {
@@ -160,7 +151,8 @@ function initializeTaskProjectCreation() {
         });
     }
 
-    // Handles the project creation button click and transitions to the project creation modal.
+
+
     const createProjectButton = document.getElementById('createProjectButton');
     if (createProjectButton) {
         createProjectButton.addEventListener('click', function() {
@@ -173,6 +165,8 @@ function initializeTaskProjectCreation() {
         });
     }
 
+
+
     const backToProjectSelectionButton = document.getElementById('backToProjectSelectionButton');
     if (backToProjectSelectionButton) {
         backToProjectSelectionButton.addEventListener('click', function() {
@@ -184,12 +178,12 @@ function initializeTaskProjectCreation() {
         });
     }
 
-    // Handles the task form submission, validates input, and sends the task data to the server.
+
+
     const taskForm = document.getElementById('taskForm');
     if (taskForm) {
         taskForm.addEventListener('submit', function(event) {
             event.preventDefault();
-            
             const taskName = document.getElementById('taskName').value;
             const priority = document.getElementById('priority').value;
             const clientId = document.getElementById('client').value;
@@ -204,7 +198,6 @@ function initializeTaskProjectCreation() {
                 document.getElementById('dueDateError').textContent = "Due date must be today or later.";
                 valid = false;
             }
-
             if (valid) {
                 const data = {
                     name: taskName,
@@ -244,18 +237,19 @@ function initializeTaskProjectCreation() {
                         modal.hide();
                     }
                     document.getElementById('taskForm').reset();
-                    // Instead of reloading the page, refresh the dashboard table
+                    showToast('Task created successfully');
                     refreshDashboard();
                 })
                 .catch(error => {
                     console.error('Error creating task:', error);
-                    alert('An error occurred while creating the task. Please try again later.');
+                    showToast('An error occurred while creating the task. Please try again later.', 'error');
                 });
             }
         });
     }
 
-    // Handles the project form submission, validates input, and sends the project data to the server.
+
+
     const projectForm = document.getElementById('projectForm');
     if (projectForm) {
         projectForm.addEventListener('submit', function(event) {
@@ -297,8 +291,8 @@ function initializeTaskProjectCreation() {
                         });
                     }
                 }
-                data.subtasks = subtasks;
 
+                data.subtasks = subtasks;
                 const csrftoken = getCookie('csrftoken');
 
                 fetch('/api/create_project/', {
@@ -334,7 +328,7 @@ function initializeTaskProjectCreation() {
                             </div>
                         `;
                         if (window.location.pathname === '/dashboard/') {
-                            window.location.reload();
+                            refreshDashboard();
                         }
                     }
                 })
@@ -346,7 +340,8 @@ function initializeTaskProjectCreation() {
         });
     }
 
-    // Handles the addition of new subtask fields to the project form.
+
+
     const addSubtaskButton = document.getElementById('addSubtaskButton');
     if (addSubtaskButton) {
         addSubtaskButton.addEventListener('click', function() {
@@ -363,11 +358,8 @@ function initializeTaskProjectCreation() {
     }
 }
 
-/**
- * Validates that a given date string is not in the past.
- * @param {string} dateString - The date string to validate
- * @returns {boolean} - True if the date is today or later, false otherwise
- */
+
+
 function isDateValid(dateString) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -375,11 +367,8 @@ function isDateValid(dateString) {
     return selectedDate >= today;
 }
 
-/**
- * Retrieves a cookie value by name.
- * @param {string} name - The name of the cookie to retrieve
- * @returns {string|null} - The cookie value or null if not found
- */
+
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -395,7 +384,8 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Initialises the task and project functionality only when the DOM is fully loaded.
+
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initialising task/project functionality...');
     initializeTaskProjectCreation();

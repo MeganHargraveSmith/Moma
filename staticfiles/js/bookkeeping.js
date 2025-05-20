@@ -1,4 +1,4 @@
-// Initialises all bookkeeping functionality when the page loads
+// Initialises various editing functionalities when the DOM is fully loaded.
 document.addEventListener('DOMContentLoaded', function() {
     InitialiseDocNumberEditing();
     InitialiseBusinessEditing();
@@ -8,8 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     InitialiseDocumentViewer();
     InitialiseSearch();
     InitialiseAddRecord();
-    updateTotals(); // Initial calculation of totals
+    updateTotals();
 
+    // Sets up the delete functionality for selected records.
     const deleteButton = document.getElementById('deleteSelectedRecords');
     const deleteCheckboxes = document.querySelectorAll('.delete-checkbox');
     const deleteConfirmationModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const dontShowAgainCheckbox = document.getElementById('dontShowAgain');
     let selectedRecords = new Set();
 
-    // Initialises the delete button state based on checked checkboxes
+    // Updates the state of the delete button based on selected checkboxes.
     function updateDeleteButtonState() {
         const checkedCheckboxes = document.querySelectorAll('.delete-checkbox:checked');
         selectedRecords.clear();
@@ -27,10 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         deleteButton.disabled = selectedRecords.size === 0;
     }
 
-    // Initial check for any pre-checked boxes
     updateDeleteButtonState();
-
-    // Handle checkbox changes
     deleteCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             if (this.checked) {
@@ -42,15 +40,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle delete button click
+    // Sets up an event listener for the delete button.
     deleteButton.addEventListener('click', function() {
         if (selectedRecords.size === 0) {
             showToast('Please select at least one record to delete', 'error');
             return;
         }
-
         const dontShowAgain = localStorage.getItem('dontShowDeleteConfirmation') === 'true';
-        
         if (dontShowAgain) {
             deleteSelectedRecords();
         } else {
@@ -58,21 +54,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle confirmation modal checkbox
+    // Sets up an event listener for the "Don't show again" checkbox.
     dontShowAgainCheckbox.addEventListener('change', function() {
         localStorage.setItem('dontShowDeleteConfirmation', this.checked);
     });
 
-    // Handle confirm delete button
+    // Sets up an event listener for the confirmation delete button.
     confirmDeleteButton.addEventListener('click', function() {
         deleteSelectedRecords();
         deleteConfirmationModal.hide();
     });
 
-    // Function to delete selected records
+    // Defines the function to delete selected records.
     function deleteSelectedRecords() {
         const recordsToDelete = Array.from(selectedRecords);
+        deleteButton.disabled = true;
+        deleteButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
         
+        // Confirms deletion for large numbers of records.
+        if (recordsToDelete.length > 10) {
+            const confirmLargeDelete = confirm(`You are about to delete ${recordsToDelete.length} records. Are you sure you want to continue?`);
+            if (!confirmLargeDelete) {
+                deleteButton.disabled = false;
+                deleteButton.innerHTML = '<i class="bi bi-trash3"></i>';
+                return;
+            }
+        }
+        
+        // Sends a POST request to delete the selected records.
         fetch('/api/delete_bookkeeping_records/', {
             method: 'POST',
             headers: {
@@ -83,38 +92,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 record_ids: recordsToDelete
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Failed to delete records');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                // Remove the rows from the table
                 recordsToDelete.forEach(id => {
                     const row = document.querySelector(`tr[data-id="${id}"]`);
                     if (row) {
                         row.remove();
                     }
                 });
-                
-                // Reset selection
+
                 selectedRecords.clear();
                 deleteButton.disabled = true;
-                
-                // Update totals
+                deleteButton.innerHTML = '<i class="bi bi-trash3"></i>';
                 updateTotals();
-                
-                // Show success message
                 showToast('Records deleted successfully');
             } else {
-                showToast('Error deleting records: ' + data.error, 'error');
+                throw new Error(data.error || 'Failed to delete records');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showToast('Error deleting records', 'error');
+            showToast(error.message || 'Error deleting records', 'error');
+            deleteButton.disabled = false;
+            deleteButton.innerHTML = '<i class="bi bi-trash3"></i>';
         });
     }
 });
 
-// Refreshes the bookkeeping table by fetching new data
+// Defines the function to refresh the bookkeeping records.
 function refreshBookkeeping() {
     fetch('/bookkeeping/', {
         method: 'GET',
@@ -138,7 +151,7 @@ function refreshBookkeeping() {
             const currentTbody = document.querySelector('#bookkeepingTable tbody');
             currentTbody.innerHTML = newTbody.innerHTML;
             
-            // Reinitialises all event listeners after refresh
+            // Reinitialises editing functionalities for the new table.
             InitialiseDocNumberEditing();
             InitialiseBusinessEditing();
             InitialiseDateEditing();
@@ -154,7 +167,7 @@ function refreshBookkeeping() {
     });
 }
 
-// Enables inline editing of document numbers
+// Defines the function to initialise document number editing.
 function InitialiseDocNumberEditing() {
     document.querySelectorAll('.editable-doc-number').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -174,6 +187,7 @@ function InitialiseDocNumberEditing() {
             this.appendChild(docNumberInput);
             docNumberInput.focus();
 
+            // Defines the function to save the new document number.
             const saveDocNumber = async () => {
                 const newValue = docNumberInput.value.trim();
 
@@ -207,6 +221,7 @@ function InitialiseDocNumberEditing() {
                 }
             };
 
+            // Sets up event listeners for the document number input.
             docNumberInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -230,7 +245,7 @@ function InitialiseDocNumberEditing() {
     });
 }
 
-// Enables inline editing of business names
+// Defines the function to initialise business editing.
 function InitialiseBusinessEditing() {
     document.querySelectorAll('.editable-business').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -250,6 +265,7 @@ function InitialiseBusinessEditing() {
             this.appendChild(businessInput);
             businessInput.focus();
 
+            // Defines the function to save the new business name.
             const saveBusiness = async () => {
                 const newValue = businessInput.value.trim();
 
@@ -283,6 +299,7 @@ function InitialiseBusinessEditing() {
                 }
             };
 
+            // Sets up event listeners for the business input.
             businessInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -306,7 +323,7 @@ function InitialiseBusinessEditing() {
     });
 }
 
-// Manages date editing with validation
+// Defines the function to initialise date editing.
 function InitialiseDateEditing() {
     document.querySelectorAll('.editable-invoice-date, .editable-payment-date').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -326,6 +343,7 @@ function InitialiseDateEditing() {
             this.appendChild(dateInput);
             dateInput.focus();
 
+            // Defines the function to save the new date.
             const saveDate = async () => {
                 const newDate = dateInput.value;
                 if (!newDate && !isInvoiceDate) {
@@ -364,6 +382,7 @@ function InitialiseDateEditing() {
                 }
             };
 
+            // Sets up event listeners for the date input.
             dateInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -387,7 +406,7 @@ function InitialiseDateEditing() {
     });
 }
 
-// Enables inline editing of amounts
+// Defines the function to initialise amount editing.
 function InitialiseAmountEditing() {
     document.querySelectorAll('.editable-amount').forEach(cell => {
         cell.addEventListener('click', function() {
@@ -408,6 +427,7 @@ function InitialiseAmountEditing() {
             this.appendChild(amountInput);
             amountInput.focus();
 
+            // Defines the function to save the new amount.
             const saveAmount = async () => {
                 const newValue = amountInput.value.trim();
                 if (newValue === '') {
@@ -454,6 +474,7 @@ function InitialiseAmountEditing() {
                 }
             };
 
+            // Sets up event listeners for the amount input.
             amountInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -477,14 +498,14 @@ function InitialiseAmountEditing() {
     });
 }
 
-// Handles document upload functionality
+// Defines the function to initialise document upload functionality.
 function InitialiseDocumentUpload() {
     document.querySelectorAll('.upload-button').forEach(button => {
         button.addEventListener('click', function() {
             const id = this.closest('tr').dataset.id;
             const cell = this.closest('.document');
-            
-            // Check if there's already a document
+
+            // Checks if a document has already been uploaded.
             if (cell.querySelector('.document-link')) {
                 alert('A document has already been uploaded for this record. Please delete the existing document before uploading a new one.');
                 return;
@@ -496,21 +517,20 @@ function InitialiseDocumentUpload() {
             fileInput.style.display = 'none';
             document.body.appendChild(fileInput);
             
+            // Sets up an event listener for the file input change.
             fileInput.addEventListener('change', async () => {
                 const file = fileInput.files[0];
                 if (!file) return;
-                
-                // Validate file size (10MB = 10 * 1024 * 1024 bytes)
+
+                // Validates the file size and type.
                 const maxSize = 10 * 1024 * 1024;
                 if (file.size > maxSize) {
                     const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
                     alert(`The selected file (${fileSizeMB}MB) exceeds the maximum allowed size of 10MB. Please choose a smaller file.`);
-                    // Clear the file input to allow selecting a new file
                     fileInput.value = '';
                     return;
                 }
                 
-                // Validate file type
                 const validTypes = ['application/pdf', 'image/png', 'image/jpeg', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
                 if (!validTypes.includes(file.type)) {
                     alert('Please select a valid file type (PDF, PNG, JPG, or DOCX)');
@@ -522,6 +542,7 @@ function InitialiseDocumentUpload() {
                 formData.append('id', id);
                 formData.append('document', file);
                 
+                // Sends a POST request to upload the document.
                 try {
                     const response = await fetch('/api/upload_bookkeeping_document/', {
                         method: 'POST',
@@ -546,16 +567,14 @@ function InitialiseDocumentUpload() {
                     console.error('Error uploading document:', error);
                     alert('Failed to upload document');
                 }
-                
                 document.body.removeChild(fileInput);
             });
-            
             fileInput.click();
         });
     });
 }
 
-// Initialises document viewer functionality
+// Defines the function to initialise the document viewer.
 function InitialiseDocumentViewer() {
     const documentLinks = document.querySelectorAll('.document-link');
     const documentFrame = document.getElementById('documentFrame');
@@ -564,25 +583,22 @@ function InitialiseDocumentViewer() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const documentUrl = this.dataset.documentUrl;
-            
-            // Always use the PDF version
             documentFrame.style.display = 'block';
             documentFrame.src = documentUrl;
         });
     });
-    
-    // Clear content when modal is closed
     const documentViewerModal = document.getElementById('documentViewerModal');
     documentViewerModal.addEventListener('hidden.bs.modal', function() {
         documentFrame.src = '';
     });
 }
 
-// Implements search functionality
+// Defines the function to initialise the search functionality.
 function InitialiseSearch() {
     const searchInput = document.getElementById('bookkeepingSearchInput');
     if (!searchInput) return;
 
+    // Maps month names to their corresponding numbers.
     const monthMap = {
         'january': '01', 'jan': '01',
         'february': '02', 'feb': '02',
@@ -598,6 +614,7 @@ function InitialiseSearch() {
         'december': '12', 'dec': '12'
     };
 
+    // Defines the function to perform the search.
     function performSearch() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         const rows = document.querySelectorAll('#bookkeepingTable tbody tr');
@@ -621,6 +638,7 @@ function InitialiseSearch() {
             const invoiceDate = row.querySelector('.invoice-date .editable')?.textContent?.toLowerCase() || '';
             const paymentDate = row.querySelector('.payment-date .editable')?.textContent?.toLowerCase() || '';
             
+            // Checks if the row matches the search term.
             let matches = docNumber.includes(searchTerm) || 
                          business.includes(searchTerm) || 
                          amount.includes(searchTerm);
@@ -635,8 +653,8 @@ function InitialiseSearch() {
         });
     }
 
+    // Sets up event listeners for the search input.
     searchInput.addEventListener('input', performSearch);
-    
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -645,11 +663,12 @@ function InitialiseSearch() {
     });
 }
 
-// Handles adding new records
+// Defines the function to initialise the add record functionality.
 function InitialiseAddRecord() {
     const addButton = document.getElementById('addBookkeepingRecord');
     if (!addButton) return;
 
+    // Sets up an event listener for the add record button.
     addButton.addEventListener('click', async () => {
         try {
             const response = await fetch('/api/create_bookkeeping/', {
@@ -673,7 +692,6 @@ function InitialiseAddRecord() {
 
             const data = await response.json();
             if (data.success) {
-                // Create the new row HTML
                 const newRow = document.createElement('tr');
                 newRow.className = 'bookkeeping-row';
                 newRow.dataset.id = data.record_id;
@@ -705,11 +723,10 @@ function InitialiseAddRecord() {
                     </td>
                 `;
 
-                // Add the new row to the table
                 const tbody = document.querySelector('#bookkeepingTable tbody');
                 tbody.appendChild(newRow);
 
-                // Initialise event listeners for the new row
+                // Reinitialises editing functionalities for the new row.
                 InitialiseDocNumberEditing();
                 InitialiseBusinessEditing();
                 InitialiseDateEditing();
@@ -717,11 +734,9 @@ function InitialiseAddRecord() {
                 InitialiseDocumentUpload();
                 InitialiseDocumentViewer();
                 InitialiseSearch();
-
-                // Update totals
                 updateTotals();
 
-                // Scroll to the new row with a slight delay to ensure the DOM is updated
+                // Scrolls to the newly created row.
                 setTimeout(() => {
                     const container = document.querySelector('.main-container');
                     const rowTop = newRow.offsetTop;
@@ -733,8 +748,6 @@ function InitialiseAddRecord() {
                         behavior: 'smooth'
                     });
                 }, 100);
-
-                // Show success message
                 showToast('New record created successfully');
             } else {
                 showToast('Failed to create new record', 'error');
@@ -746,25 +759,28 @@ function InitialiseAddRecord() {
     });
 }
 
-// Utility functions
+// Defines the function to format a date for display.
 function formatDateForDisplay(dateString) {
     if (!dateString) return '';
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
 }
 
+// Defines the function to format a date for input.
 function formatDateForInput(dateString) {
     if (!dateString) return '';
     const [day, month, year] = dateString.split('/');
     return `${year}-${month}-${day}`;
 }
 
+// Defines the function to get a cookie by name.
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
+            // Checks if the cookie matches the name.
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -774,39 +790,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Helper function to show toast messages
-function showToast(message, type = 'success') {
-    const toastContainer = document.createElement('div');
-    toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
-    toastContainer.style.zIndex = '5';
-    
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
-    toast.setAttribute('aria-atomic', 'true');
-    
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    `;
-    
-    toastContainer.appendChild(toast);
-    document.body.appendChild(toastContainer);
-    
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    toast.addEventListener('hidden.bs.toast', function() {
-        toastContainer.remove();
-    });
-}
-
-// Calculates and updates the totals in the summary row
+// Defines the function to update the totals displayed on the page.
 function updateTotals() {
     const rows = document.querySelectorAll('.bookkeeping-row');
     const totalRecords = rows.length;
@@ -821,4 +805,4 @@ function updateTotals() {
 
     document.getElementById('totalRecords').textContent = totalRecords;
     document.getElementById('totalExpenditure').textContent = totalExpenditure.toFixed(2);
-} 
+}

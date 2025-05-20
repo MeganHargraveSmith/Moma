@@ -1,8 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+{% include "includes/task_project_button.html" %}
 
 <head>
     <meta charset="UTF-8">
@@ -202,9 +206,11 @@
         </div>
     </div>
 
-    <!-- Links to Bootstrap 5 JavaScript for functionality. -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/dashboard.js' %}"></script>
-</body>
 
-</html>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Links to custom JavaScript. -->
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script src="{% static 'js/task_project.js'%}"></script>
+{% endblock %}
