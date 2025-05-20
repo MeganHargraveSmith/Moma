@@ -2,6 +2,10 @@
 By Megan Hargrave-Smith / Student 22003455
 UWE Year 3 Digital Systems Project
 
+## UPDATE 20/05/2025:
+The final thing done before uploading this project was to use generative AI to document the code (as mentioned in the Dissertation).
+Unfortunately, I didn't do my due diligence in testing the project afterwards because I assumed there would be no effect. As it turns out, the AI made several changes to the code by accidentally including comments as uncommented, among other things, most notably duplicating the signup page on the login page, and getting rid of the login page entirely. I am only noticing this now in preparing for my Viva. In order to give my presentation effectively and show my project, I've had no choice but to revert any commenting errors I've found, or I wouldn't be able to do anything. I am aware my deadline has passed so I understand that the project will have to be marked with the bugged version (the previous commit), this is just for the sake of my presentation. If for any reason you can't get to the previous commit, the copy of the project in my file upload to Blackboard is the same. 
+
 ## Overview
 
 Moma is a web application designed specifically for professional freelancers to manage their work and clients effectively. It aims to provide a user-friendly interface that allows freelancers to track their work, manage clients, and streamline their workflow without the complexities and unnecessary features often found in traditional project management software.
